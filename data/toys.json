@@ -1,6 +1,6 @@
 [
     {
-      "id": 1,
+      "_id": 1,
       "sub-category": "Math Toys",
       "name": "Mathematical Puzzle Set",
       "price": 19.99,
@@ -12,7 +12,7 @@
       "detail-description": "The Mathematical Puzzle Set includes various brain-teasing puzzles and games to enhance mathematical thinking skills. It's suitable for kids aged 8 and above."
     },
     {
-      "id": 2,
+      "_id": 2,
       "sub-category": "Science Toys",
       "name": "Microscope Kit",
       "price": 49.99,
@@ -24,7 +24,7 @@
       "detail-description": "The Microscope Kit is a complete set for young scientists to explore the microscopic world. It comes with slides, specimen samples, and adjustable magnification for exciting discoveries."
     },
     {
-      "id": 3,
+      "_id": 3,
       "sub-category": "Engineering Toys",
       "name": "Build Your Own Robot",
       "price": 29.99,
@@ -36,7 +36,7 @@
       "detail-description": "The Build Your Own Robot kit allows kids to assemble and customize their own robotic companion. It introduces basic engineering concepts and coding skills in a fun and interactive way."
     },
     {
-      "id": 4,
+      "_id": 4,
       "sub-category": "Math Toys",
       "name": "Number Board Game",
       "price": 14.99,
@@ -48,7 +48,7 @@
       "detail-description": "The Number Board Game is an educational and entertaining way to learn basic arithmetic operations. It's suitable for kids aged 6 and above and can be played with family and friends."
     },
     {
-      "id": 5,
+      "_id": 5,
       "sub-category": "Science Toys",
       "name": "Chemistry Lab Set",
       "price": 39.99,
@@ -60,7 +60,7 @@
       "detail-description": "The Chemistry Lab Set includes a range of chemicals, test tubes, and equipment for safe and exciting experiments. It's perfect for young chemists who want to explore the world of chemistry."
     },
     {
-      "id": 6,
+      "_id": 6,
       "sub-category": "Engineering Toys",
       "name": "Remote Control Car Kit",
       "price": 24.99,
