@@ -56,13 +56,29 @@ async function run() {
     });
 
     // added
-    
+    app.get("/addToy", async (req, res) => {
+      console.log(req.query.Email);
+      let query = {};
+      if (req.query?.Email) {
+        query = { Email: req.query.Email };
+      }
+      const result = await toyCollection.find(query).toArray();
+      res.send(result);
+    });
+
     app.post("/addToy", async (req, res) => {
       const user = req.body;
       console.log(user);
       const result = await toyCollection.insertOne(user);
-      res.send(result)
+      res.send(result);
     });
+
+    app.delete('/addToy/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await toyCollection.deleteOne(query);
+      res.send(result);
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
