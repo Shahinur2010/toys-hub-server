@@ -73,19 +73,35 @@ async function run() {
       res.send(result);
     });
 
-    app.patch("/addToy/:id", async (req, res) => {
+
+    app.get('/addToy/:id', async(req, res) => {
       const id = req.params.id;
-      const filter = { _id: new ObjectId(id) };
-      const updated = req.body;
-      console.log(updated);
-      const updateDoc = {
+      const query = {_id: new ObjectId(id)}
+      const result = await toyCollection.findOne(query);
+      res.send(result)
+    })
+
+    app.put('/addToy/:id', async(req, res)=>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const options = {upsert: true};
+      const updatedToy = req.body;
+      const toy = {
         $set: {
-          status: updated.status,
-        },
-      };
-      const result = await toyCollection.updateOne(filter, updateDoc);
+          name: updatedToy.name,
+          availableQuantity: updatedToy.availableQuantity,
+          price: updatedToy.price,
+          rating: updatedToy.rating,
+          subCategory: updatedToy.subCategory,
+          detailDescription: updatedToy.detailDescription,
+          picture: updatedToy.picture,
+          seller: updatedToy.seller,
+          Email: updatedToy.Email
+        }
+      }
+      const result = await toyCollection.updateOne(filter, toy, options);
       res.send(result);
-    });
+    })
 
     app.delete("/addToy/:id", async (req, res) => {
       const id = req.params.id;
@@ -95,7 +111,7 @@ async function run() {
     });
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
@@ -113,3 +129,5 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Toys Hub Server is running on port: ${port}`);
 });
+
+
