@@ -28,13 +28,26 @@ async function run() {
     const toyCollection = client.db("toysHub").collection("toys");
     // const addToyCollection = client.db("toysHub").collection("addToy");
 
-    app.get("/toys", async (req, res) => {
-      const cursor = toyCollection.find();
-      const result = await cursor.toArray();
+    app.get("/toys/:category", async (req, res) => {
+      console.log(req.params.category, "category");
+      if (
+        req.params.category == "Math Toys" ||
+        req.params.category == "Engineering Toys" ||
+        req.params.category == "Science Toys"
+      ) {
+        const cursor = await toyCollection
+          .find({ subCategory: req.params.category })
+          .sort({price: -1})
+          .toArray();
+        console.log(cursor);
+        res.send(cursor);
+        return;
+      }
+      const result = await toyCollection.find({}).sort({price: -1}).toArray();
       res.send(result);
     });
 
-    app.get("/toys/:id", async (req, res) => {
+    app.get("/toy/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
 
@@ -69,22 +82,22 @@ async function run() {
     app.post("/addToy", async (req, res) => {
       const user = req.body;
       console.log(user);
+      body.price = new Price();
       const result = await toyCollection.insertOne(user);
       res.send(result);
     });
 
-
-    app.get('/addToy/:id', async(req, res) => {
+    app.get("/addToy/:id", async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
+      const query = { _id: new ObjectId(id) };
       const result = await toyCollection.findOne(query);
-      res.send(result)
-    })
+      res.send(result);
+    });
 
-    app.put('/addToy/:id', async(req, res)=>{
+    app.put("/addToy/:id", async (req, res) => {
       const id = req.params.id;
-      const filter = {_id: new ObjectId(id)}
-      const options = {upsert: true};
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
       const updatedToy = req.body;
       const toy = {
         $set: {
@@ -96,12 +109,12 @@ async function run() {
           detailDescription: updatedToy.detailDescription,
           picture: updatedToy.picture,
           seller: updatedToy.seller,
-          Email: updatedToy.Email
-        }
-      }
+          Email: updatedToy.Email,
+        },
+      };
       const result = await toyCollection.updateOne(filter, toy, options);
       res.send(result);
-    })
+    });
 
     app.delete("/addToy/:id", async (req, res) => {
       const id = req.params.id;
@@ -129,5 +142,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Toys Hub Server is running on port: ${port}`);
 });
-
-
