@@ -1,13 +1,21 @@
 const express = require("express");
 const cors = require("cors");
+const app = express();
+
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
-const app = express();
 const port = process.env.PORT || 5000;
 
 // middleware
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
+const corsConfig = {
+  origin: '*',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+}
+app.use(cors(corsConfig))
+app.options("", cors(corsConfig));
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.x4tlawd.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -23,15 +31,15 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    // await client.connect();
+    
 
     const toyCollection = client.db("toysHub").collection("toys");
     // const addToyCollection = client.db("toysHub").collection("addToy");
 
-    const indexKeys = { name: 1, subCategory: 1 }; // Replace field1 and field2 with your actual field names
-    const indexOptions = { name: "titleCategory" }; // Replace index_name with the desired index name
-    const result = await toyCollection.createIndex(indexKeys, indexOptions);
-    console.log(result);
+    // const indexKeys = { name: 1, subCategory: 1 }; // Replace field1 and field2 with your actual field names
+    // const indexOptions = { name: "titleCategory" }; // Replace index_name with the desired index name
+    // const result = await toyCollection.createIndex(indexKeys, indexOptions);
+    // console.log(result);
 
     app.get("/toys/:category", async (req, res) => {
       console.log(req.params.category, "category");
@@ -81,7 +89,7 @@ async function run() {
       if (req.query?.Email) {
         query = { Email: req.query.Email };
       }
-      const result = await toyCollection.find(query).limit(20).sort({price: 1}).toArray();
+      const result = await toyCollection.find(query).limit(20).toArray();
       res.send(result);
     });
 
