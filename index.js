@@ -28,6 +28,11 @@ async function run() {
     const toyCollection = client.db("toysHub").collection("toys");
     // const addToyCollection = client.db("toysHub").collection("addToy");
 
+    const indexKeys = { name: 1, subCategory: 1 }; // Replace field1 and field2 with your actual field names
+    const indexOptions = { name: "titleCategory" }; // Replace index_name with the desired index name
+    const result = await toyCollection.createIndex(indexKeys, indexOptions);
+    console.log(result);
+
     app.get("/toys/:category", async (req, res) => {
       console.log(req.params.category, "category");
       if (
@@ -38,12 +43,13 @@ async function run() {
         const cursor = await toyCollection
           .find({ subCategory: req.params.category })
           .sort({price: -1})
+          .limit(20)
           .toArray();
         console.log(cursor);
         res.send(cursor);
         return;
       }
-      const result = await toyCollection.find({}).sort({price: -1}).toArray();
+      const result = await toyCollection.find({}).sort({price: -1}).limit(20).toArray();
       res.send(result);
     });
 
@@ -75,15 +81,28 @@ async function run() {
       if (req.query?.Email) {
         query = { Email: req.query.Email };
       }
-      const result = await toyCollection.find(query).toArray();
+      const result = await toyCollection.find(query).limit(20).sort({price: 1}).toArray();
+      res.send(result);
+    });
+
+    app.get("/getToysByText/:text", async (req, res) => {
+      const text = req.params.text;
+      const result = await toyCollection
+        .find({
+          $or: [
+            { name: { $regex: text, $options: "i" } },
+            { subCategory: { $regex: text, $options: "i" } },
+          ],
+        })
+        .toArray();
       res.send(result);
     });
 
     app.post("/addToy", async (req, res) => {
       const user = req.body;
       console.log(user);
-      body.price = new Price();
-      const result = await toyCollection.insertOne(user);
+      const newPrice = parseFloat(user.price);
+      const result = await toyCollection.insertOne({...user, price:newPrice});
       res.send(result);
     });
 
